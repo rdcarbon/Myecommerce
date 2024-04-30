@@ -15,7 +15,7 @@ namespace API.Controllers
         private readonly StoreContext _context;
         public ProductsController(StoreContext context)
         {
-            this._context=context;
+            _context=context;
         }
         [HttpGet]
         public async Task<ActionResult<List<Product>>>GetProducts(){
