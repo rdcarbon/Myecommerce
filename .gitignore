@@ -482,3 +482,12 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+.mono/registry/CurrentUser/software/microsoft/csdevkit/telemetry/persistentpropertybag/values.xml
+.mono/registry/CurrentUser/software/microsoft/csdevkit/v1/pids/142424_133579235205397317/values.xml
+.mono/registry/CurrentUser/software/microsoft/csdevkit/v1/pids/2743_133588598163275600/values.xml
+.mono/registry/CurrentUser/software/microsoft/csdevkit/v1/pids/2790_133588524392057894/values.xml
+.mono/registry/CurrentUser/software/microsoft/csdevkit/v1/pids/2825_133588022737744053/values.xml
+.mono/registry/CurrentUser/software/microsoft/csdevkit/v1/pids/3156_133586928545917389/values.xml
+.mono/registry/CurrentUser/software/microsoft/csdevkit/v1/pids/3558_133586219603746521/values.xml
+.mono/registry/CurrentUser/software/microsoft/csdevkit/v1/pids/4897_133582845294411293/values.xml
+.mono/registry/CurrentUser/software/microsoft/sqmclient/values.xml

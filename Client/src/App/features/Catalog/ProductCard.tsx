@@ -1,5 +1,7 @@
+import { NavLink } from "react-router-dom";
 import { Product } from "../../models/product"
 import {Card, CardMedia, CardContent, CardHeader, Avatar, CardActions, Button, Typography } from "@mui/material"
+//import ProductDetails from "./ProductDetails";
 //import React from 'react'
 interface Props{
     product:Product
@@ -33,7 +35,7 @@ export default function ProductCard({product}:Props) {
     <CardActions>
         <Button variant='contained'>Add to Cart</Button>
         
-        <Button variant='contained'>View</Button>
+        <Button variant='contained' component={NavLink} to={'/Catalog/'+product.id}>View</Button>
     </CardActions>
 </Card>
   )

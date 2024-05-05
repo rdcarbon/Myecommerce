@@ -10,7 +10,6 @@ services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 services.AddDbContext<StoreContext>(opt =>opt.UseSqlite(builder.Configuration.GetConnectionString("UsingSqlite")));
 services.AddCors();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

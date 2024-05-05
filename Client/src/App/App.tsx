@@ -4,7 +4,7 @@
 // import { /*useEffect,*/ useContext, useEffect, useState } from "react";
 import "./App.css";
 // import { Product } from "./models/product";
-import Catalog from "./features/Catalog/Catalog";
+//import Catalog from "./features/Catalog/Catalog";
 //import { Typography } from "@mui/material";
 import Header from "./layout/Header";
 import {
@@ -15,6 +15,7 @@ import {
   DarkThemeProvider,
   // DarkThemeContext,
 } from "./context/DarkThemeContext";
+import { Outlet } from "react-router-dom";
 //import { ThemeContext } from "@emotion/react";
 
 function App() {
@@ -65,7 +66,7 @@ function App() {
         <CssBaseline />
         <Header />
         <Container>
-          <Catalog />
+          <Outlet/>
         </Container>
  
     </DarkThemeProvider>
