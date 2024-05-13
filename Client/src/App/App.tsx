@@ -16,6 +16,8 @@ import {
   // DarkThemeContext,
 } from "./context/DarkThemeContext";
 import { Outlet } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 //import { ThemeContext } from "@emotion/react";
 
 function App() {
@@ -62,7 +64,7 @@ function App() {
 
   return (
     <DarkThemeProvider>
-     
+      <ToastContainer position="bottom-right"  hideProgressBar theme="colored"/>
         <CssBaseline />
         <Header />
         <Container>

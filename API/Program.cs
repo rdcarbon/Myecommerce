@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using API.Data;
+using API.Middleware;
 var builder = WebApplication.CreateBuilder(args);
 var services=builder.Services;
 // Add services to the container.
@@ -11,7 +12,7 @@ services.AddSwaggerGen();
 services.AddDbContext<StoreContext>(opt =>opt.UseSqlite(builder.Configuration.GetConnectionString("UsingSqlite")));
 services.AddCors();
 var app = builder.Build();
-
+app.UseMiddleware<ExceptionMiddleware>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
