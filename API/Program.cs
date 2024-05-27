@@ -9,7 +9,8 @@ services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
-services.AddDbContext<StoreContext>(opt =>opt.UseSqlite(builder.Configuration.GetConnectionString("UsingSqlite")));
+services.AddDbContext<StoreSqliteContext>(opt =>opt.UseSqlite(builder.Configuration.GetConnectionString("UsingSqlite")));
+services.AddDbContext<StoreContext>(opt =>opt.UseNpgsql(builder.Configuration.GetConnectionString("UsingPostgreSql")));
 services.AddCors();
 var app = builder.Build();
 app.UseMiddleware<ExceptionMiddleware>();
@@ -22,21 +23,23 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseCors(opt=> {
-    opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
+    opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000").AllowCredentials();
 });
 app.UseAuthorization();
 
 app.MapControllers();
 var scope= app.Services.CreateScope();
 var context=scope.ServiceProvider.GetRequiredService<StoreContext>();
-var logger=scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-try
+var contextsqlite=scope.ServiceProvider.GetRequiredService<StoreSqliteContext>();
+var logger2=scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+/* try
 {
-    context.Database.Migrate();
+   // context.Database.Migrate();
     DbInitializer.Initialize(context);
+    DbSqliteInitializer.Initialize(contextsqlite);
 }
 catch (Exception ex)
 {
-    logger.LogError(ex, "A problem occured during migration");
-}
+    logger2.LogError(ex, "A problem occured during migration");
+} */
 app.Run();

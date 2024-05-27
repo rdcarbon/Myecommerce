@@ -2,12 +2,14 @@ import { createBrowserRouter } from "react-router-dom";
 import App from "./App";
 import Catalog from "./features/Catalog/Catalog";
 import ProductDetails from "./features/Catalog/ProductDetails";
-import AboutPage from "./AboutUs/AboutPage";
-import Contact_Page from "./AboutUs/Contact_Page";
+import AboutPage from "./features/AboutUs/AboutPage";
+import Contact_Page from "./features/AboutUs/Contact_Page";
 import ServerError from "./Error/ServerError";
 import NotFound from "./Error/NotFound";
 import ErrorPage from "./Error/ErrorPage";
-import agent from "./api/agent";
+//import agent from "./api/agent";
+import BasketDetails from "./features/Basket/BasketDetails";
+import Checkout from "./features/Basket/Checkout";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -17,19 +19,21 @@ export const router = createBrowserRouter([
       {
         path: "catalog/:id",
         element: <ProductDetails />,
-        loader: ({ params }) => {
+/*         loader: ({ params }) => {
             const d=params.id && parseInt(params.id);
           if (d) 
             return agent.Catalog.details(d);
           else
             return agent.TestErrors.get400Error();
-        },
+        }, */
         errorElement:<ErrorPage/>
       },
       { path: "about", element: <AboutPage /> },
       { path: "contact", element: <Contact_Page /> },
       { path: "server-error", element: <ServerError /> },
       { path: "not-found", element: <NotFound /> },
+      {path: "shopping-cart",element:<BasketDetails/>},
+      {path:"checkout",element:<Checkout/>}
     ],
 
     errorElement: <ErrorPage />,

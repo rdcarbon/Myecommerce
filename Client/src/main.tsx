@@ -8,9 +8,12 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { RouterProvider } from 'react-router-dom';
 import { router } from './App/Router.tsx';
+import { BasketProvider } from './App/context/BasketContext.tsx';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
+  <React.StrictMode>   
+    <BasketProvider>
     <RouterProvider router={router}/>
+    </BasketProvider>
   </React.StrictMode>,
 )

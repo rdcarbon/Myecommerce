@@ -1,6 +1,10 @@
 import { NavLink } from "react-router-dom";
 import { Product } from "../../models/product"
 import {Card, CardMedia, CardContent, CardHeader, Avatar, CardActions, Button, Typography } from "@mui/material"
+import agent from "../../api/agent";
+import { BasketContext } from "../../context/BasketContext";
+import { useContext } from "react";
+import { currencyformat } from "../../util/util";
 //import ProductDetails from "./ProductDetails";
 //import React from 'react'
 interface Props{
@@ -11,6 +15,13 @@ interface Props{
 
 
 export default function ProductCard({product}:Props) {
+    const {setBasket}=useContext(BasketContext)
+    const handleaddtocart=()=>{
+        agent.Basket.addItem(product.id)
+        .then(bask=>setBasket(bask))
+        .catch(error=>console.log(error))
+
+    }
   return (
 <Card >
     <CardHeader
@@ -27,13 +38,13 @@ export default function ProductCard({product}:Props) {
     
          />
     <CardContent>
-        <Typography variant="h6">${(product.price/100).toFixed(2)}</Typography>
+        <Typography variant="h6">{currencyformat(product.price)}</Typography>
         <Typography variant="h6" color='secondary.light'>{product.brand}/{product.type}</Typography>
     
 
     </CardContent>
     <CardActions>
-        <Button variant='contained'>Add to Cart</Button>
+        <Button variant='contained' onClick={handleaddtocart}>Add to Cart</Button>
         
         <Button variant='contained' component={NavLink} to={'/Catalog/'+product.id}>View</Button>
     </CardActions>

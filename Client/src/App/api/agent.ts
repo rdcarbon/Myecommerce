@@ -1,7 +1,9 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 //import { toast } from "react-toastify";
 const axiosInstance=axios.create({
-baseURL:"https://localhost:7000/api/"})
+baseURL:"http://localhost:5000/api/"
+})
+axiosInstance.defaults.withCredentials=true;
 const responseBody=(response:AxiosResponse)=> response.data;
 axiosInstance.interceptors.response.use(
    async response=>response,
@@ -50,6 +52,7 @@ const Catalog={
     list:()=>requests.get('products'),
     details:(id:number)=>requests.get(`products/${id}`)
 }
+
 const TestErrors={
     get400Error:()=>requests.get('buggy/bad-request'),
     get401Error:()=>requests.get('buggy/unauthorized'),
@@ -57,9 +60,17 @@ const TestErrors={
     get404Error:()=>requests.get('buggy/not-found'),
     get500Error:()=>requests.get('buggy/server-error'),
     getValidationError:()=>requests.get('buggy/validation-error')
+}
+const Basket={
+    get:()=>requests.get("basket"),
+    addItem:(productId:number,quantity=1)=>requests.post(`basket?productId=${productId}&quantity=${quantity}`,{}),
+    removeItem:(productId:number,quantity=1)=>requests.delete(`basket?productId=${productId}&quantity=${quantity}`),
+    updateItem:(productId:number,quantity=1)=>requests.put(`basket?productId=${productId}&quantity=${quantity}`,{})
+
 }    
 const agent={
     Catalog,
-    TestErrors
+    TestErrors,
+    Basket
 }
 export default agent;

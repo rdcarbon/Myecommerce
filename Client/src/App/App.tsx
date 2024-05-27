@@ -18,9 +18,13 @@ import {
 import { Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+//import { useContext } from "react";
+//import { BasketContext } from "./context/BasketContext";
+//import { BasketProvider } from "./context/BasketContext";
 //import { ThemeContext } from "@emotion/react";
 
 function App() {
+ // const {basket,setBasket}=useContext(BasketContext)
   // const [products, setProducts] = useState<Product[]>([]);
   // useEffect(() => {
   //   fetch("https://localhost:7000/api/products")
@@ -64,13 +68,14 @@ function App() {
 
   return (
     <DarkThemeProvider>
+   
       <ToastContainer position="bottom-right"  hideProgressBar theme="colored"/>
         <CssBaseline />
         <Header />
         <Container>
           <Outlet/>
         </Container>
- 
+       
     </DarkThemeProvider>
   );
 }

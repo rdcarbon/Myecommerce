@@ -493,8 +493,11 @@ $RECYCLE.BIN/
 .mono/registry/CurrentUser/software/microsoft/sqmclient/values.xml
 .mono/
 .config/
+.vscode
 .vs/
 ./API/.mono/
 ./API/.config/
 ./API/.vscode/
 
+.vscode/launch.json
+API/.vscode/launch.json

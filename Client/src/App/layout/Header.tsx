@@ -15,6 +15,7 @@ import { useContext } from "react";
 import { DarkThemeContext } from "../context/DarkThemeContext";
 import { NavLink } from "react-router-dom";
 import { ShoppingCart } from "@mui/icons-material";
+import { BasketContext } from "../context/BasketContext";
 
 // type Props = {}
 const midlinks = [
@@ -41,6 +42,9 @@ export default function Header() {
   const { darkMode, toggleTheme } = useContext(DarkThemeContext);
   //  const [toggle, setToggle]=useState(false)
   // useEffect(()=>toggleTheme(),[toggle])
+  const {basket}=useContext(BasketContext);
+  const itemsCount=basket?.items.reduce((sum,item)=>sum+item.quantity,0)
+  
   return (
     <AppBar position="static" sx={{ mb: 4 }}>
       <Toolbar sx={{display:'flex', justifyContent:'space-between',alignItems:'right'}}>
@@ -68,10 +72,10 @@ export default function Header() {
           ))}
         </List>
         <Box sx={{display:'flex', alignItems:'center'}}>
-          <IconButton size="large" edge="start" color="inherit" sx={{ mr: 2 }}>
-            <Badge badgeContent={5} color="secondary">
+          <IconButton component={NavLink} to={"/shopping-cart"} size="large" edge="start" color="inherit" sx={{ mr: 2 }}  >
+           {basket?.items.length?  <Badge badgeContent={itemsCount} color="secondary">
               <ShoppingCart />
-            </Badge>
+            </Badge>: <ShoppingCart/>}
           </IconButton>
           <List sx={{ display: "flex" }}>
             {rightlinks.map(({ title, path }) => (

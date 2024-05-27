@@ -3,9 +3,9 @@ using API.Entities;
 
 namespace API.Data
 {
-    public static class DbInitializer
+    public static class DbSqliteInitializer
     {
-        public static void Initialize(StoreContext context)
+        public static void Initialize(StoreSqliteContext context)
         {
             if (context.Products.Any()) {
             Console.WriteLine("Products Identified");

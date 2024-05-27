@@ -1,6 +1,6 @@
 // import React from 'react';
 import {Alert, AlertTitle, Button, ButtonGroup, Container, List, ListItem, ListItemText, Typography} from "@mui/material";
-import agent from "../api/agent";
+import agent from "../../api/agent";
 import { useState } from "react";
 
 function AboutPage() {
@@ -12,7 +12,7 @@ function AboutPage() {
     <Container>
     <Typography variant='h2'>Error Testing Page</Typography>
     <ButtonGroup fullWidth>
-    <Button variant='contained' onClick={()=>agent.TestErrors.get400Error()/*.catch(error=>console.log(error))*/}>
+    <Button variant='contained' onClick={()=>agent.TestErrors.get400Error().catch(error=>console.log(error))}>
       Test 400 Error
       </Button>
       <Button variant='contained' onClick={()=>agent.TestErrors.get401Error().catch(error=>console.log(error))}>
