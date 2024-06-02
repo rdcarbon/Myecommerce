@@ -1,5 +1,5 @@
-import { useContext, useState } from "react";
-import { BasketContext } from "../../context/BasketContext";
+import {  useState } from "react";
+//import { BasketContext } from "../../context/BasketContext";
 import {
   Box,
   Button,
@@ -14,37 +14,48 @@ import {
   //TableFooter,
   TableHead,
   TableRow,
+  Typography,
 } from "@mui/material";
 import { Add, Delete, Remove } from "@mui/icons-material";
 import BasketSummary from "./BasketSummary";
-import agent from "../../api/agent";
+//import agent from "../../api/agent";
 import { currencyformat } from "../../util/util";
-import { NavLink } from "react-router-dom";
+import {  NavLink } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/stores/store";
+import { addBasketItemAsync, removeBasketItemAsync } from "./basketSlice";
 
 export default function BasketDetails() {
-  const [status, setStatus] = useState({ loading: false, name: 0 });
-  const { basket, setBasket, removeitem } = useContext(BasketContext);
+  const dispatch: AppDispatch = useDispatch();
+  const {basket,status} = useSelector((state:RootState)=>state.basket)
+  const [productId, setProductId] = useState(0);
+  
+  //const { basket, setBasket, removeitem } = useContext(BasketContext);
   const handleadditem = (id: number) => {
-    setStatus({ loading: true, name: id });
+    /* setStatus({ loading: true, name: id });
     agent.Basket.addItem(id)
-      .then((basket) => setBasket(basket))
+      .then((basket) => dispatch(setBasket(basket)))
       .catch((error) => console.log(error))
-      .finally(() => setStatus({ loading: false, name: 0 }));
+      .finally(() => setStatus({ loading: false, name: 0 })); */
+      setProductId(id)
+      dispatch(addBasketItemAsync({productId:id,quantity:1}))
   };
-  const handleremoveitem = (id: number, quantity = 1) => {
-    setStatus({ loading: true, name: id });
-    agent.Basket.removeItem(id, quantity)
-      .then(() => removeitem(id, quantity))
+  const handleremoveitem = (productId: number, quantity = 1) => {
+   /*  setStatus({ loading: true, name: productId });
+    agent.Basket.removeItem(productId, quantity)
+      .then(() => dispatch(removeItem({productId, quantity})))
       .catch((error) => console.log(error))
-      .finally(() => setStatus({ loading: false, name: 0 }));
-  };
+      .finally(() => setStatus({ loading: false, name: 0 })); */
+      setProductId(productId)
+      dispatch(removeBasketItemAsync({productId,quantity}))
+    };
   const basketTotal: number = basket
     ? basket.items.reduce(
         (sum, item) => sum + (item.price * item.quantity) / 100,
         0
       )
     : 0;
-
+if (!basket || basket.items.length==0) return <Typography variant="h6"> Basket is empty</Typography>
   return (
     <>
       <TableContainer component={Paper} variant="outlined">
@@ -62,6 +73,7 @@ export default function BasketDetails() {
             {basket?.items.map((item) => (
               <TableRow key={item.productId}>
                 <TableCell>
+                  <NavLink to={`../Catalog/${item.productId}`}>
                   <Box display="flex" alignItems="center">
                     <Box component="img" display={'inherit'} alignItems={'inherit'}
                       src={item.pictureUrl}
@@ -70,14 +82,15 @@ export default function BasketDetails() {
                     />
                     <span>{item.name}</span>
                   </Box>
+                  </NavLink>
                 </TableCell>
                 <TableCell>
                   <IconButton onClick={() => handleadditem(item.productId)}>
                     <Add color="primary" />
                   </IconButton>
 
-                  {status.loading && item.productId == status.name ? (
-                    <CircularProgress />
+                  {(status.includes('pending') && item.productId == productId) ? (
+                    <CircularProgress size={16}/>
                   ) : (
                     item.quantity
                   )}

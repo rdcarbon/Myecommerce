@@ -15,7 +15,9 @@ import { useContext } from "react";
 import { DarkThemeContext } from "../context/DarkThemeContext";
 import { NavLink } from "react-router-dom";
 import { ShoppingCart } from "@mui/icons-material";
-import { BasketContext } from "../context/BasketContext";
+//import { BasketContext } from "../context/BasketContext";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/stores/store";
 
 // type Props = {}
 const midlinks = [
@@ -42,7 +44,7 @@ export default function Header() {
   const { darkMode, toggleTheme } = useContext(DarkThemeContext);
   //  const [toggle, setToggle]=useState(false)
   // useEffect(()=>toggleTheme(),[toggle])
-  const {basket}=useContext(BasketContext);
+  const {basket}=useSelector((state:RootState)=>(state.basket))
   const itemsCount=basket?.items.reduce((sum,item)=>sum+item.quantity,0)
   
   return (

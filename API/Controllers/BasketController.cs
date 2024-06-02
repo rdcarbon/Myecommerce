@@ -41,7 +41,7 @@ namespace API.Controllers
             _logger.LogInformation($"Adding product {productId} to basket.\n Quantity: {quantity} ");
             var basket = await RetrieveBasket() ?? await CreateBasket();
             var product = await _context.Products.FindAsync(productId);
-            if (product == null) return NotFound();
+            if (product == null) return BadRequest(new ProblemDetails{Title="Product not found in database."});
             basket.addItem(product, quantity);
             var result = await _context.SaveChangesAsync() > 0;
             if (result) return CreatedAtRoute("GetBasket", new BasketDto(basket));
@@ -66,7 +66,7 @@ namespace API.Controllers
             var item=basket.Items.FirstOrDefault(item=>item.ProductId==productId);
             if (item==null ) {
                var product=await _context.Products.FindAsync(productId);
-               if (product==null) return NotFound();
+               if (product==null) return BadRequest(new ProblemDetails{Title="Product not found in database."});
                basket.addItem(product,quantity);
             }
             else
@@ -90,10 +90,8 @@ namespace API.Controllers
             basket.removeItem(productId, quantity);
             var result = await _context.SaveChangesAsync()>0;
 
-            if (result)
-           
-            return NoContent();
-            else return BadRequest(new ProblemDetails{Title ="Removing Basketitem to Database Failed"});
+            if (result)  return NoContent();
+            return BadRequest(new ProblemDetails{Title ="Removing Basketitem to Database Failed"});
         }
         // Utilities         
         //=======================================================

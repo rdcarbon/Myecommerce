@@ -12,37 +12,47 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { ChangeEvent, useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Product } from "../../models/product";
+import { ChangeEvent, useEffect, useState } from "react";
+import {  useParams } from "react-router-dom";
+//import { Product } from "../../models/product";
 //import axios from 'axios'
-import agent from "../../api/agent";
-import NotFound from "../../Error/NotFound";
+//import agent from "../../api/agent";
+//import NotFound from "../../Error/NotFound";
 import LoadingComponent from "../Loading/LoadingComponent";
-import { BasketContext } from "../../context/BasketContext";
+//import { BasketContext } from "../../context/BasketContext";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/stores/store";
+import { addBasketItemAsync, removeBasketItemAsync, updateBasketItemAsync } from "../Basket/basketSlice";
+import { currencyformat } from "../../util/util";
+import { fetchProductAsync, productSelectors } from "./CatalogSlice";
+import NotFound from "../../Error/NotFound";
+//import ErrorPage from "../../Error/ErrorPage";
 // import React from 'react'
 
 function ProductDetails() {
-  const { basket, setBasket } = useContext(BasketContext);
+  // Parameters
+  // const navigate=useNavigate()
+  const dispatch:AppDispatch=useDispatch()
+  const { basket,status:basketStatus} = useSelector((state:RootState)=>state.basket);
   const { id } = useParams<{ id: string }>();
-  const [loading, setloading] = useState(true);
-  const [product, setProduct] = useState<Product | null>(null);
+  
+  const isValid=!isNaN(Number(id)) && (Number.isInteger(Number(id)))
+  //const [loading, setloading] = useState(true);
+  const product=useSelector((state:RootState)=>isValid? productSelectors.selectById(state,Number(id)):null)
+  const {status}=useSelector((state:RootState)=>state.catalog)
+ // const [product, setProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState(0);
-  const [submitting, setSubmitting] = useState(false);
+ // const [submitting, setSubmitting] = useState(false);
   const item = basket?.items.find((i) => i.productId == product?.id);
-  const [status, setStatus] = useState(200);
+  
   useEffect(() => {
     if (item) setQuantity(item.quantity);
-    id &&
-      agent.Catalog.details(parseInt(id))
-        .then((newproduct) => setProduct(newproduct))
-        .catch((error) => {
-          console.log(error);
-          error.status && setStatus(error.status);
-        })
-        .finally(() => setloading(false));
-  }, [id, item]);
-  console.log(`status:${status}`);
+    if (!product)
+      dispatch(fetchProductAsync(Number(id)))
+        
+  }, [id, item,dispatch,product]);
+
+  /*Handles */
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const num: number = parseInt(event.target.value);
     if (num >= 0) {
@@ -53,27 +63,31 @@ function ProductDetails() {
   };
   const handleOnClick = () => {
     if (!product) return;
-    setSubmitting(true);
+   // setSubmitting(true);
     if (!item) {
-      agent.Basket.addItem(product.id, quantity)
-        .then((basket) => setBasket(basket))
-        .catch((error) => console.error(error))       
+      dispatch(addBasketItemAsync({productId:product.id,quantity}))
+   //   setSubmitting(false);
+      return;
     }
-    else
-      {agent.Basket.updateItem(product.id, quantity)
-        .then((basket) => setBasket(basket))
-        .catch((error) => console.error(error))
+    
+    if (quantity>0)
+      {
+        dispatch(updateBasketItemAsync({productId:product.id,quantity}))
+
       }
-      setSubmitting(false);
+    else
+        dispatch(removeBasketItemAsync({productId:product.id,quantity:item.quantity}))
+    //  setSubmitting(false);
       
   };
-  if (loading) {
-    return <LoadingComponent />;
+  if (status.includes('pending')||status.includes('init')) {
+    return <LoadingComponent message="Loading products"/>;
   }
 
-  if (!product) {
-    return <NotFound />;
-  }
+   if (!product) {
+    console.log("error")
+      return <NotFound/>
+   }
   return (
     <Grid container spacing={6}>
       <Grid item xs={6} sx={{ width: "90%" }}>
@@ -88,7 +102,7 @@ function ProductDetails() {
         <Typography variant="h3">{product.name}</Typography>
         <Divider sx={{ mb: 2 }} />
         <Typography variant="h4" color="secondary">
-          ${(product.price / 100).toFixed(2)}
+          {currencyformat(product.price)}
         </Typography>
         <TableContainer>
           <Table>
@@ -132,7 +146,7 @@ function ProductDetails() {
               fullWidth
               variant="contained"
               sx={{ height: "50px" }}
-            >{ (!submitting)?
+            >{ (!basketStatus.includes('pending'))?
               item ? "Update Quantity" : "Add to Card":<CircularProgress sx={{color:'white'}}/>
             }
             </Button>

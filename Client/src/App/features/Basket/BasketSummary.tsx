@@ -25,8 +25,8 @@ export default function BasketSummary({subtotal=0,deliveryFee=0}:BasketSummaryPr
                             <TableCell align="right">{subtotal + deliveryFee}</TableCell>
                         </TableRow>
                         <TableRow>
-                            <TableCell>
-                                <span style={{fontStyle: 'italic'}}>*Orders over $100 qualify for free delivery</span>
+                            <TableCell sx={{fontStyle:'italic'}}>
+                                <span>*Orders over $100 qualify for free delivery</span>
                             </TableCell>
                         </TableRow>
                     </TableBody>

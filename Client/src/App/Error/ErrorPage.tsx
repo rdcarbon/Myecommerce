@@ -2,18 +2,18 @@
 import { Container, Paper, Typography } from '@mui/material'
 import { AxiosError } from 'axios';
 //import { AxiosError } from 'axios';
-import { useRouteError } from 'react-router-dom';
+import { /* useLocation, useNavigate, */ useRouteError } from 'react-router-dom';
 import NotFound from './NotFound';
 import ServerError from './ServerError';
 // import React from 'react'
 
 export default function ErrorPage() {
-    
-    const error=useRouteError() as AxiosError
-
+   // const navigate =useNavigate();
+    const error=useRouteError()  as AxiosError
+//const sta=useLocation();
     //console.error(error);
    // if (isRouteErrorResponse(error)){
-    if (error.status){
+    if (error?.status){
       if (error.status>=500)
       {
 

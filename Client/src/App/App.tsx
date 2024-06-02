@@ -18,54 +18,31 @@ import {
 import { Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import React from "react";
+import { getCookie } from "./util/util";
+import agent from "./api/agent";
+import { setBasket } from "./features/Basket/basketSlice";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "./redux/stores/store";
 //import { useContext } from "react";
 //import { BasketContext } from "./context/BasketContext";
 //import { BasketProvider } from "./context/BasketContext";
 //import { ThemeContext } from "@emotion/react";
 
-function App() {
- // const {basket,setBasket}=useContext(BasketContext)
-  // const [products, setProducts] = useState<Product[]>([]);
-  // useEffect(() => {
-  //   fetch("https://localhost:7000/api/products")
-  //     .then((response) => response.json())
-  //     .then((data) => setProducts(data));
-  // }, []);
-  // function addProduct() {
-  //   setProducts((prevState) => [
-  //     ...prevState,
-  //     {
-  //       name: "product" + prevState.length,
-  //       id: prevState.length + 1,
-  //       price: 1000,
-  //       pictureUrl:
-  //         "https://plus.unsplash.com/premium_photo-1680087014917-904bb37c5191?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  //     },
-  //   ]);
-  // }
-  // const [darkMode, setDarkMode]=useState(false);
-  // const { darkMode } = useContext(DarkThemeContext);
-
-  // const palettetype = darkMode ? "dark" : "light";
-  //const toggledarkMode =()=>{setDarkMode((prevDarkMode)=>!prevDarkMode)};
-  // const [theme, setTheme] = useState(
-  //   createTheme({
-  //     palette: {
-  //       mode: palettetype,
-  //     },
-  //   })
-  // );
-  // useEffect(() => {
-  //   // const paltype = darkMode ? "dark" : "light";
-  //   setTheme(()=>
-  //     createTheme({
-  //       palette: {
-  //         mode: darkMode?'dark':'light',
-  //       },
-  //     })
-  //   );
-  // }, [darkMode]);
-
+function App ():React.ReactElement{
+  const dispatch: AppDispatch = useDispatch();
+  //const {basket} = useSelector((state:RootState)=>state.basket)
+  React.useEffect(() => {
+    const buyerid = getCookie("buyerId");
+    if (buyerid) {
+      agent.Basket.get().then(response=>response.data)
+        .then((basket) => {
+          // console.log(basket)
+          dispatch(setBasket(basket));
+        })
+        .catch((error) => console.log(error));
+    }
+  }, [dispatch]);
   return (
     <DarkThemeProvider>
    
