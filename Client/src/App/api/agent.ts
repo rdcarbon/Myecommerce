@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
+import { PaginatedResponse } from "../models/pagination";
 //import {NavigateFunction}from 'react-router-dom'
 //import { toast } from "react-toastify";
 const axiosInstance = axios.create({
@@ -9,7 +10,18 @@ const axiosInstance = axios.create({
 axiosInstance.defaults.withCredentials = true;
 //const responseBody=(response:AxiosResponse)=> response.data;
 axiosInstance.interceptors.response.use(
-  async (response) => response,
+  async (response) => {
+    const pagination = response.headers["pagination"];
+    if (pagination) {
+   
+      response.data = new PaginatedResponse(
+        response.data,
+        JSON.parse(pagination)
+      );
+    
+    }
+    return response;
+  },
   (error: AxiosError) => {
     const { data, status } = error.response as AxiosResponse;
     switch (status) {
@@ -45,18 +57,17 @@ axiosInstance.interceptors.response.use(
   }
 );
 const requests = {
-  get: async (url: string) => await axiosInstance.get(url),
+  get: async (url: string, params?: URLSearchParams) =>
+    await axiosInstance.get(url, { params }),
   post: async (url: string, body: object) =>
     await axiosInstance.post(url, body),
   put: async (url: string, body: object) => await axiosInstance.put(url, body),
   delete: async (url: string) => await axiosInstance.delete(url),
 };
 const Catalog = {
-  list: () => requests.get("products"),
-  details: (id: number) => {
-    console.log(`agent loading product ${id}`);
-    return requests.get(`products/${id}`);
-  },
+  list: (params?: URLSearchParams) => requests.get("products", params),
+  details: (id: number) => requests.get(`products/${id}`),
+  fetchFilters: () => requests.get("products/filters"),
 };
 
 const TestErrors = {
@@ -69,9 +80,12 @@ const TestErrors = {
 };
 const Basket = {
   get: () => requests.get("basket"),
-  addItem:(productId:number,quantity=1)=>requests.post(`basket?productId=${productId}&quantity=${quantity}`,{}),
- removeItem:(productId:number,quantity=1)=>requests.delete(`basket?productId=${productId}&quantity=${quantity}`),
- updateItem:(productId:number,quantity=1)=>requests.put(`basket?productId=${productId}&quantity=${quantity}`,{})
+  addItem: (productId: number, quantity = 1) =>
+    requests.post(`basket?productId=${productId}&quantity=${quantity}`, {}),
+  removeItem: (productId: number, quantity = 1) =>
+    requests.delete(`basket?productId=${productId}&quantity=${quantity}`),
+  updateItem: (productId: number, quantity = 1) =>
+    requests.put(`basket?productId=${productId}&quantity=${quantity}`, {}),
 };
 const agent = {
   Catalog,

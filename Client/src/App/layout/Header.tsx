@@ -48,7 +48,7 @@ export default function Header() {
   const itemsCount=basket?.items.reduce((sum,item)=>sum+item.quantity,0)
   
   return (
-    <AppBar position="static" sx={{ mb: 4 }}>
+    <AppBar position='relative' sx={{ mb: 4 }}>
       <Toolbar sx={{display:'flex', justifyContent:'space-between',alignItems:'right'}}>
         <Box sx={{display:'flex',alignItems:'center'}}>
           <Typography

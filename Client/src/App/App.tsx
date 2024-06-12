@@ -10,6 +10,7 @@ import Header from "./layout/Header";
 import {
   Container,
   CssBaseline,
+  Paper,
 } from "@mui/material";
 import {
   DarkThemeProvider,
@@ -49,7 +50,7 @@ function App ():React.ReactElement{
       <ToastContainer position="bottom-right"  hideProgressBar theme="colored"/>
         <CssBaseline />
         <Header />
-        <Container>
+        <Container sx={{padding:'.0em',ml:'1em',mr:'1em'}} maxWidth='xl' component= {Paper} variant='elevation'>
           <Outlet/>
         </Container>
        
