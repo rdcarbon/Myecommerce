@@ -1,7 +1,5 @@
 import {
   Box,
-  Button,
-  CircularProgress,
   Divider,
   Grid,
   Table,
@@ -26,6 +24,7 @@ import { addBasketItemAsync, removeBasketItemAsync, updateBasketItemAsync } from
 import { currencyformat } from "../../util/util";
 import { fetchProductAsync, productSelectors } from "./CatalogSlice";
 import NotFound from "../../Error/NotFound";
+import LoadButton from "../../util/LoadButton";
 //import ErrorPage from "../../Error/ErrorPage";
 // import React from 'react'
 
@@ -138,18 +137,19 @@ function ProductDetails() {
             />
           </Grid>
           <Grid item xs={9}>
-            <Button
+            <LoadButton
               onClick={handleOnClick}
               disabled={item? quantity==item.quantity : false}
               color={"primary"}
               size="large"
+              loading={ (basketStatus.includes('pending'))}
               fullWidth
               variant="contained"
               sx={{ height: "50px" }}
-            >{ (!basketStatus.includes('pending'))?
-              item ? "Update Quantity" : "Add to Card":<CircularProgress sx={{color:'white'}}/>
+            >
+  {            item ? "Update Quantity" : "Add to Card"
             }
-            </Button>
+            </LoadButton>
           </Grid>
         </Grid>
       </Grid>

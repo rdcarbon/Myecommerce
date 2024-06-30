@@ -19,12 +19,13 @@ import {
 import { Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import React from "react";
-import { getCookie } from "./util/util";
-import agent from "./api/agent";
-import { setBasket } from "./features/Basket/basketSlice";
+import React, { useCallback } from "react";
+// import {  } from "./util/util";
+// import agent from "./api/agent";
+import { fetchBasketAsync } from "./features/Basket/basketSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "./redux/stores/store";
+import { fetchCurrentUser } from "./features/Account/AccountSlice";
 //import { useContext } from "react";
 //import { BasketContext } from "./context/BasketContext";
 //import { BasketProvider } from "./context/BasketContext";
@@ -33,24 +34,27 @@ import { AppDispatch } from "./redux/stores/store";
 function App ():React.ReactElement{
   const dispatch: AppDispatch = useDispatch();
   //const {basket} = useSelector((state:RootState)=>state.basket)
-  React.useEffect(() => {
-    const buyerid = getCookie("buyerId");
-    if (buyerid) {
-      agent.Basket.get().then(response=>response.data)
-        .then((basket) => {
-          // console.log(basket)
-          dispatch(setBasket(basket));
-        })
-        .catch((error) => console.log(error));
+   const initapp= useCallback(async ()=>{
+      try{
+        await dispatch(fetchCurrentUser())
+        await dispatch(fetchBasketAsync())
+      }
+      catch(error){
+        console.error(error);
+      }
     }
-  }, [dispatch]);
+ , [dispatch] )
+  React.useEffect(() => {
+
+    initapp()
+  }, [initapp]);
   return (
     <DarkThemeProvider>
    
       <ToastContainer position="bottom-right"  hideProgressBar theme="colored"/>
         <CssBaseline />
         <Header />
-        <Container sx={{padding:'.0em',ml:'1em',mr:'1em'}} maxWidth='xl' component= {Paper} variant='elevation'>
+        <Container  maxWidth='xl' component= {Paper}  variant='elevation'>
           <Outlet/>
         </Container>
        

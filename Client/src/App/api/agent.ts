@@ -1,5 +1,9 @@
+
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { PaginatedResponse } from "../models/pagination";
+import { toast } from "react-toastify";
+import store from "../redux/stores/store";
+//import { loginUser, SignUpUser } from "../models/User";
 //import {NavigateFunction}from 'react-router-dom'
 //import { toast } from "react-toastify";
 const axiosInstance = axios.create({
@@ -9,6 +13,12 @@ const axiosInstance = axios.create({
 
 axiosInstance.defaults.withCredentials = true;
 //const responseBody=(response:AxiosResponse)=> response.data;
+axiosInstance.interceptors.request.use(config=>{
+  const token=store.getState().account.user?.token;
+  if (token) config.headers.Authorization=`Bearer ${token}`;
+  return config;
+}
+)
 axiosInstance.interceptors.response.use(
   async (response) => {
     const pagination = response.headers["pagination"];
@@ -38,10 +48,10 @@ axiosInstance.interceptors.response.use(
         // toast.error(data.title);
         break;
       case 401:
-        // toast.error(data.title);
+         toast.error(data.title||"Unauthorized");
         break;
       case 500:
-        //toast.error(data.title);
+        toast.error(data.title);
         // window.location.href = './server-error';
 
         break;
@@ -57,12 +67,12 @@ axiosInstance.interceptors.response.use(
   }
 );
 const requests = {
-  get: async (url: string, params?: URLSearchParams) =>
-    await axiosInstance.get(url, { params }),
-  post: async (url: string, body: object) =>
-    await axiosInstance.post(url, body),
-  put: async (url: string, body: object) => await axiosInstance.put(url, body),
-  delete: async (url: string) => await axiosInstance.delete(url),
+  get:  (url: string, params?: URLSearchParams) =>
+     axiosInstance.get(url, { params }),
+  post: (url: string, body: object) =>
+     axiosInstance.post(url, body),
+  put: (url: string, body: object) =>  axiosInstance.put(url, body),
+  delete:  (url: string) =>  axiosInstance.delete(url),
 };
 const Catalog = {
   list: (params?: URLSearchParams) => requests.get("products", params),
@@ -87,9 +97,19 @@ const Basket = {
   updateItem: (productId: number, quantity = 1) =>
     requests.put(`basket?productId=${productId}&quantity=${quantity}`, {}),
 };
+const Account={
+  
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  login:(values:any)=>requests.post("account/login",values),
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  register:(values:any)=>requests.post("account/register",values),
+  currentuser:()=>requests.get("account/currentuser")
+}
 const agent = {
   Catalog,
   TestErrors,
   Basket,
+  Account
 };
 export default agent;

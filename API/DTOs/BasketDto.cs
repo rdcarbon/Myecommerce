@@ -11,14 +11,6 @@ namespace API.DTOs
         public string BuyerId { get; set; }
         public List<BasketItemDto> Items { get; set; } = new();
 
-        public BasketDto(Basket basket)
-        {
-            Id = basket.Id;
-            BuyerId = basket.BuyerId;
-            Items = basket.Items
-            .Select(item => new BasketItemDto(item))
-            .ToList();
-        }
     }
 
     public class BasketItemDto
@@ -33,18 +25,6 @@ namespace API.DTOs
         public string Brand { get; set; }
         // public  ulong QuantityInStock{get;set;}
 
-        public BasketItemDto(BasketItem item)
-        {
-            ProductId = item.ProductId;
-            Quantity = item.Quantity;
-            Name = item.Product.Name;
-            Description = item.Product.Description;
-            Price = item.Product.Price;
-            PictureUrl = item.Product.PictureUrl;
-            Type = item.Product.Type;
-            Brand = item.Product.Brand;
-            //   QuantityInStock=item.Product.QuantityInStock;
-
-        }
+ 
     }
 }

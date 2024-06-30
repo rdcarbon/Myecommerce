@@ -17,7 +17,8 @@ import { NavLink } from "react-router-dom";
 import { ShoppingCart } from "@mui/icons-material";
 //import { BasketContext } from "../context/BasketContext";
 import { useSelector } from "react-redux";
-import { RootState } from "../redux/stores/store";
+import { RootState, useAppSelector } from "../redux/stores/store";
+import SignInMenu from "./SignInMenu";
 
 // type Props = {}
 const midlinks = [
@@ -42,6 +43,7 @@ const navStyles: object = {
 };
 export default function Header() {
   const { darkMode, toggleTheme } = useContext(DarkThemeContext);
+  const {user} =useAppSelector(state=>state.account)
   //  const [toggle, setToggle]=useState(false)
   // useEffect(()=>toggleTheme(),[toggle])
   const {basket}=useSelector((state:RootState)=>(state.basket))
@@ -79,6 +81,7 @@ export default function Header() {
               <ShoppingCart />
             </Badge>: <ShoppingCart/>}
           </IconButton>
+          {user? <SignInMenu/>:
           <List sx={{ display: "flex" }}>
             {rightlinks.map(({ title, path }) => (
               <ListItem component={NavLink} to={path} sx={navStyles} key={path}>
@@ -86,6 +89,7 @@ export default function Header() {
               </ListItem>
             ))}
           </List>
+}
         </Box>
       </Toolbar>
     </AppBar>

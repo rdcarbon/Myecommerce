@@ -2,12 +2,13 @@ import React from 'react';
 import Button, { ButtonProps } from '@mui/material/Button';
 //import CircularProgress from '@mui/material/CircularProgress';
 import { styled } from '@mui/system';
+import { CircularProgress } from '@mui/material';
 
 // Create a styled wrapper to position the CircularProgress over the Button
-const ButtonWrapper = styled('div')({
-  position: 'relative',
-  display: 'inline-block',
-});
+// const ButtonWrapper = styled('div')({
+//   position: 'relative',
+//   display: 'inline-block',
+// });
 
 const StyledButton = styled(Button)({
   // Any custom styles for the button can go here
@@ -28,17 +29,17 @@ interface LoadButtonProps extends ButtonProps {
   loadingIndicator?:React.ReactNode|string|number|null
 }
 
-const LoadButton: React.FC<LoadButtonProps> = ({ loading=false, loadingIndicator=null,children, ...props }) => {
+const LoadButton: React.FC<LoadButtonProps> = ({ loading=false, loadingIndicator=<CircularProgress sx={{color:'white'}}/>,children, ...props }) => {
   return (
-    <ButtonWrapper>
+    // <ButtonWrapper>
       <StyledButton {...props} >
-        {loading? 
-            children:
-            loadingIndicator
+        {(loading)? 
+            loadingIndicator:
+            children
         }
       </StyledButton>
 
-    </ButtonWrapper>
+    // </ButtonWrapper>
   );
 };
 
